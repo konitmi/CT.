@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ct-temporary-chat
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MESSAGE_TTL_MINUTES
+        value: "60"
