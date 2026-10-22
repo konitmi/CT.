@@ -16,7 +16,7 @@ const ROOM_CODE_LENGTH = 6;
 
 const app = express();
 app.disable("x-powered-by");
-app.use(express.static(path.join(__dirname, "public"), {
+app.use(express.static(path.join(__dirname, "Public"), {
   etag: true,
   maxAge: "1h"
 }));
