@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101211">
+  <meta name="description" content="CT — temporary real-time chat rooms. No permanent chat history.">
+  <title>CT — Temporary Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="CT home">
+        <span class="brand-mark">CT<span class="brand-dot">.</span></span>
+        <span class="brand-sub">TEMPORARY CHAT</span>
+      </a>
+      <div class="top-status"><span class="live-dot"></span><span id="connection-label">CONNECTING</span></div>
+    </header>
+
+    <main>
+      <section id="lobby" class="lobby">
+        <div class="hero">
+          <div class="eyebrow"><span class="eyebrow-line"></span> NO HISTORY. JUST HERE.</div>
+          <h1>Say it.<br><span>Let it go.</span></h1>
+          <p class="hero-copy">Real-time rooms for conversations that don't stick around. No permanent chat history. No account required.</p>
+          <div class="rules-row">
+            <div><span class="rule-number">01</span><span>Latest 100 messages</span></div>
+            <div><span class="rule-number">02</span><span>Auto-expire in 60 min</span></div>
+            <div><span class="rule-number">03</span><span>RAM only</span></div>
+          </div>
+        </div>
+
+        <div class="lobby-grid">
+          <section class="panel create-panel">
+            <div class="panel-kicker">START SOMETHING</div>
+            <h2>Create a room</h2>
+            <p class="muted">Give your room a name. Share the code with whoever should join.</p>
+            <form id="create-form">
+              <label for="create-username">Your username</label>
+              <input id="create-username" name="username" maxlength="24" minlength="2" placeholder="e.g. nightowl" autocomplete="nickname" required>
+              <label for="room-name">Room name</label>
+              <input id="room-name" name="roomName" maxlength="40" minlength="2" placeholder="e.g. after hours" required>
+              <button class="primary-button" type="submit">Create room <span aria-hidden="true">↗</span></button>
+            </form>
+          </section>
+
+          <section class="panel join-panel">
+            <div class="panel-kicker">ALREADY HAVE A CODE?</div>
+            <h2>Join a room</h2>
+            <p class="muted">Enter a room code shared by someone else.</p>
+            <form id="join-form">
+              <label for="join-username">Your username</label>
+              <input id="join-username" name="username" maxlength="24" minlength="2" placeholder="Pick a name" autocomplete="nickname" required>
+              <label for="room-code">Room code</label>
+              <input id="room-code" name="code" maxlength="6" minlength="6" placeholder="ABC123" class="code-input" autocapitalize="characters" spellcheck="false" required>
+              <button class="secondary-button" type="submit">Join room <span aria-hidden="true">→</span></button>
+            </form>
+          </section>
+        </div>
+
+        <section class="room-browser">
+          <div class="section-heading">
+            <div><div class="panel-kicker">OPEN ROOMS</div><h2>Rooms with people in them</h2></div>
+            <button id="refresh-rooms" class="text-button" type="button">Refresh ↻</button>
+          </div>
+          <div id="rooms-list" class="rooms-list"><div class="empty-rooms">Looking for active rooms…</div></div>
+        </section>
+
+        <p class="privacy-note"><span aria-hidden="true">◌</span> Messages live in temporary server memory, not a chat database. They disappear after 60 minutes or when pushed out by newer messages. Server restarts clear everything. Other users can still take screenshots, and the hosting provider may keep operational logs.</p>
+      </section>
+
+      <section id="chat-view" class="chat-view hidden">
+        <aside class="chat-sidebar">
+          <button id="leave-room" class="back-button" type="button">← <span>All rooms</span></button>
+          <div class="sidebar-room">
+            <div class="room-avatar">#</div>
+            <div><div id="sidebar-room-name" class="sidebar-room-name">Room</div><div id="sidebar-room-code" class="mono muted">------</div></div>
+          </div>
+          <div class="sidebar-divider"></div>
+          <div class="sidebar-label">IN THIS ROOM <span id="member-count" class="count-pill">0</span></div>
+          <div id="members-list" class="members-list"></div>
+          <div class="sidebar-spacer"></div>
+          <div class="expiry-card"><span class="expiry-icon">⌁</span><div><strong>Temporary by design</strong><p>100 messages max<br>60-minute expiry</p></div></div>
+        </aside>
+
+        <section class="chat-main">
+          <header class="chat-header">
+            <div><div id="chat-room-title" class="chat-room-title">Room name</div><div class="chat-subtitle"><span class="live-dot"></span> Live conversation</div></div>
+            <button id="copy-code" class="copy-button" type="button"><span>CODE</span><strong id="header-room-code">------</strong><span id="copy-label">COPY ↗</span></button>
+          </header>
+          <div class="message-meta"><span>MESSAGES</span><span id="message-count">0 / 100</span></div>
+          <div id="messages" class="messages" aria-live="polite" aria-label="Chat messages"></div>
+          <div class="composer-wrap">
+            <form id="message-form" class="composer">
+              <input id="message-input" maxlength="1000" placeholder="Write something…" autocomplete="off" aria-label="Write a message" required>
+              <button type="submit" aria-label="Send message">↑</button>
+            </form>
+            <div class="composer-foot"><span>ENTER TO SEND</span><span id="expiry-label">MESSAGES EXPIRE AFTER 60 MIN</span></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer"><span>CT © <span id="year"></span></span><span>NO HISTORY BY DEFAULT.</span><a href="https://x.com/0xKonitmi" target="_blank" rel="noopener noreferrer">BUILT ON THE INTERNET ↗</a></footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
